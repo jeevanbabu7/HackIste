@@ -1,5 +1,6 @@
 import React from "react";
 import './Home.css'; // Import your CSS for styling
+import { Link } from "react-router-dom";
 
 const topics = [
   {
@@ -41,19 +42,24 @@ const topics = [
 
 const HomePage = () => {
   return (
-    <div className="homepage">
-      <h1 className="home-title">Welcome to Your Personalized Learning Hub</h1>
-      <div className="topic-cards">
+    <div className="bg-slate-900 text-white flex flex-col gap-12 p-8">
+      <h1 className="text-4xl text-center font-bold">Welcome to Your Personalized Learning Hub</h1>
+      <div className="flex flex-row gap-12 flex-wrap justify-center p-10">
         {topics.map(topic => (
-          <div key={topic.id} className="topic-card">
-            <img src={topic.imageUrl} alt={topic.title} />
-            <h2>{topic.title}</h2>
-            <p>{topic.description}</p>
-            <a href={topic.link} className="button">Explore</a>
+          <div key={topic.id} className="bg-slate-800 rounded-lg shadow-lg p-6 transition-transform transform hover:scale-105">
+            <img src={topic.imageUrl} alt={topic.title} className="w-full h-40 object-cover rounded-t-lg" />
+            <h2 className="text-2xl mt-4 font-semibold">{topic.title}</h2>
+            <p className="mt-2 text-gray-400">{topic.description}</p>
+            <Link to={`/subject/${topic.title}`}>
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 border border-blue-500 hover:border-transparent rounded mt-4 transition duration-300">
+                Learn More
+              </button>
+            </Link>
           </div>
         ))}
       </div>
     </div>
+
   );
 };
 

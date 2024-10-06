@@ -5,6 +5,8 @@ import Home from "./pages/Home/Home.jsx";
 import Auth from "./pages/Auth/Auth.jsx";
 import Reg from "./pages/Reg/Reg.jsx";
 import Query from "./pages/Query/Query.jsx";
+import Subject from "./pages/Subject.jsx";
+import QuizPage from "./pages/Quiz/QuizPage.jsx";
 
 
 const App = () => {
@@ -16,6 +18,8 @@ const App = () => {
           <Route path='/auth' element={<Auth />} /> {/* Self-closing */}
           <Route path='/Register' element={<Reg />} />
           <Route path="/query" element={<Query />}/>
+          <Route path="/subject/:name" element={<Subject />}/>
+          <Route path="/subject/:name/quiz" element={<QuizPage />}/>
         </Routes>
       </div>
     </Router>

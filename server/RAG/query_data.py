@@ -71,7 +71,7 @@ def qandr(query_text):
 
         
     
-def generate_neuron_quiz_items(query_text, num_questions):
+def generate_neuron_quiz_items(query_text, num_questions = 1):
     PROMPT_TEMPLATE = """
     Based on the following context related to neurons, generate a multiple-choice question with four options. Also, specify the correct answer:
 
@@ -132,13 +132,13 @@ def parse_response(response_text):
     # Example parsing logic - Adjust this based on the actual format of response_text
     lines = response_text.strip().split('\n')
     print(lines)
-    question = lines[1]
-    options = {
-        "A": lines[2],
-        "B": lines[3],
-        "C": lines[4],
-        "D": lines[5]
-    }
+    question = lines[2]
+    options = [
+        lines[3],
+        lines[4],
+        lines[5],
+        lines[6]
+    ]
     answer = lines[8].strip()  # Assuming the answer is on the 6th line
     
     return question, options, answer
