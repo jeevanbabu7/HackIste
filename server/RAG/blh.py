@@ -1,5 +1,5 @@
 from query_data import qandr
-
-query="what is a nervous system in two sentences?"
-response=qandr(query)
+from query_data import generate_neuron_quiz_items
+query="Provide information on neurons for quiz generation."
+response=generate_neuron_quiz_items(query, 5)
 print(response)

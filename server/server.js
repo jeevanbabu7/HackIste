@@ -5,10 +5,12 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
+import json from "body-parser/lib/types/json.js";
 dotenv.config();
 
 const app = express();
 
+app.use(express.json());
 // Parse JSON objects in requests
 app.use(bodyParser.json());
 

@@ -5,26 +5,53 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 
 function Auth() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  // Handle login form submission (without backend interaction)
-  function handleAuth(e) {
+  // Handle login form submission
+  async function handleAuth(e) {
     e.preventDefault();
 
     // Simple front-end validation
-    if (!username || !password) {
-      setError('Please enter both username and password');
-    } else {
-      setError(''); // Clear the error if both fields are provided
-      alert('Login successful!'); // Mock successful login
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+
+    // Data to send to the backend
+    const formData = { email, password };
+
+    try {
+      const response = await fetch('http://localhost:5173/api/user/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        setError('');  // Clear any error
+        setSuccess('Login successful!');  // Mock successful login message
+      } else {
+        setError(data.message || 'An error occurred');
+        setSuccess('');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Failed to connect to the server');
+      setSuccess('');
     }
   }
 
   // Clear the error message when the close icon is clicked
   function handleMsg() {
     setError('');
+    setSuccess('');
   }
 
   return (
@@ -33,15 +60,15 @@ function Auth() {
         <div className="leftdiv">
           <h1>Login</h1>
 
-          {/* Username Input */}
+          {/* Email Input */}
           <div className="inp">
             <CiUser className="user" />
             <input
-              type="text"
-              placeholder="Username"
+              type="email"
+              placeholder="Email"
               className="inp11"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -69,6 +96,14 @@ function Auth() {
       {error && (
         <div className="errordiv">
           <p>{error}</p>
+          <RxCross2 className="cross" onClick={handleMsg} />
+        </div>
+      )}
+
+      {/* Success Message */}
+      {success && (
+        <div className="successdiv">
+          <p>{success}</p>
           <RxCross2 className="cross" onClick={handleMsg} />
         </div>
       )}

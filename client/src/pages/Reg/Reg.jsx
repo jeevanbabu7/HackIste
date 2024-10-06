@@ -6,58 +6,67 @@ import { MdPassword, MdEmail } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 
 function Reg() {
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [createPassword, setCreatePassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [classi, setClassi] = useState('');
-  const [Email, setEmail] = useState('');
-  const [ph, setPh] = useState('');
+  const [email, setEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Handle form submission (without backend interaction)
-  function handleReg(e) {
+  // Handle registration form submission
+  async function handleReg(e) {
     e.preventDefault();
-  
+    
     // Clear previous messages
     setErrorMsg('');
     setSuccessMsg('');
-  
+
     // Simple front-end validation
-    if (!Email || !username || !createPassword || !confirmPassword || !classi || !ph) {
+    if (!email || !name || !createPassword || !confirmPassword || !classi) {
       setErrorMsg('Please fill in all fields');
-    } else if (createPassword !== confirmPassword) {
+      return;
+    }
+
+    if (createPassword !== confirmPassword) {
       setErrorMsg('Passwords do not match');
-    } else {
-      // Data to be sent to the backend
-      const formData = {
-        username,
-        email: Email,
-        password: createPassword,
-        class: classi,
-        phone: ph,
-      };
-  
-      // Perform the POST request using fetch
-      fetch('https://your-backend-api.com/register', {
+      return;
+    }
+
+    // Data to be sent to the backend
+    const formData = {
+      name,
+      email,
+      password: createPassword,
+      class_: classi, // Ensuring this matches the backend's expected field
+    };
+console.log(formData);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/user/sign-up', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            setSuccessMsg('Registration successful!');
-          } else {
-            setErrorMsg(data.message || 'Registration failed');
-          }
-        })
-        .catch((error) => {
-          setErrorMsg('An error occurred. Please try again.');
-          console.error('Error:', error);
-        });
+      });
+      console.log(formData);
+      
+      
+      const data = await response.json();
+      
+
+      if (response.status === 201) {
+        setSuccessMsg('Registration successful!');
+        setErrorMsg('');
+      } else {
+        setErrorMsg(data.message || 'Registration failed');
+        setSuccessMsg('');
+      }
+    } catch (error) {
+      setErrorMsg('An error occurred. Please try again.');
+      console.error('Error:', error);
+      setSuccessMsg('');
     }
   }
 
@@ -77,13 +86,13 @@ function Reg() {
             {/* Email Input */}
             <div className='inp'>
               <MdEmail className='user' />
-              <input type='text' placeholder='Email' className='inp11' onChange={(e) => setEmail(e.target.value)} />
+              <input type='email' placeholder='Email' className='inp11' value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
 
-            {/* Username Input */}
+            {/* Name (Username) Input */}
             <div className='inp'>
               <CiUser className='user' />
-              <input type='text' placeholder='Username' className='inp11' value={username} onChange={(e) => setUsername(e.target.value)} />
+              <input type='text' placeholder='Name' className='inp11' value={name} onChange={(e) => setName(e.target.value)} />
             </div>
 
             {/* Create Password Input */}
@@ -102,12 +111,6 @@ function Reg() {
             <div className='inp'>
               <MdPassword className='user' />
               <input type='text' placeholder='Class' className='inp11' value={classi} onChange={(e) => setClassi(e.target.value)} />
-            </div>
-
-            {/* Phone Number Input */}
-            <div className='inp'>
-              <MdPassword className='user' />
-              <input type='text' placeholder='Phone Number' className='inp11' value={ph} onChange={(e) => setPh(e.target.value)} />
             </div>
 
             {/* Register Button */}
